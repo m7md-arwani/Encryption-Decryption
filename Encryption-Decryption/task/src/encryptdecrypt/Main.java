@@ -6,25 +6,52 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner g = new Scanner(System.in);
-        String text = g.nextLine();
+        String operation = g.nextLine();
+        String message = g.nextLine();
         int key = g.nextInt();
-        System.out.println(EncryptionAlgorithm(text, key));
+        switch (operation) {
+            case "enc":
+                EncryptionAlgorithm(message, key);
+                break;
+            case "dec":
+                DecryptionAlgorithm(message, key);
+                break;
+            default:
+                System.out.println("Wrong operation");
+                break;
+        }
 
     }
 
 
-    public static String EncryptionAlgorithm(String st, int key) {
+    public static void EncryptionAlgorithm(String st, int key) {
         StringBuilder str = new StringBuilder(st);// Text to cipher.
         for (int i = 0; i < str.length(); i++) {
-            if (Character.isAlphabetic(str.charAt(i))) {
-                char ch = str.charAt(i);
-                ch += key; // ciphering.
-                if (ch > 122) {
-                    ch -= 26;
-                }
-                str.setCharAt(i, ch);
+
+            char ch = str.charAt(i);
+            ch += key; // ciphering.
+            if (ch > 126) {
+                ch -= 94;
             }
+            str.setCharAt(i, ch);
+
         }
-        return str.toString();
+        System.out.println(str);
+    }
+
+    public static void DecryptionAlgorithm(String st, int key) {
+        StringBuilder str = new StringBuilder(st);// Text to decipher.
+        for (int i = 0; i < str.length(); i++) {
+
+            char ch = str.charAt(i);
+            ch -= key; // deciphering.
+            if (ch > 126) {
+                ch += 94;
+            }
+            str.setCharAt(i, ch);
+
+        }
+        System.out.println(str);
+
     }
 }
