@@ -1,40 +1,30 @@
 package encryptdecrypt;
 
+import java.util.Scanner;
 
 
 public class Main {
     public static void main(String[] args) {
+        Scanner g = new Scanner(System.in);
+        String text = g.nextLine();
+        int key = g.nextInt();
+        System.out.println(EncryptionAlgorithm(text, key));
 
-        String input = "we found a treasure!";
-        StringBuilder str = new StringBuilder(input);
-        for (int i = 0; i < str.length(); i++) {
-            if (Character.isAlphabetic(str.charAt(i))) {
-                str.setCharAt(i, counterpartFinder(str.charAt(i)));
-            }
-        }
-        System.out.println(str);
     }
 
 
-    // The parameter 'ch' is the letter that we want to cipher.
-    public static char counterpartFinder(char ch) {
-        char[] letters = new char[26]; // Will hold all the alphabet (lower case)
-        char ascii = 'a'; // starting from the letter "a" lower case.
-        for (int i = 0; i < letters.length; i++) {
-            letters[i] = ascii;
-            ascii++;
-        }
-        int index = 0;
-        for (int i = 0; i < letters.length; i++) {
-            // looking for the letter in alphabet array.
-            if (letters[i] == ch) {
-                // this general equation should give us any letter's counterpart from the other end.
-                index = letters.length - i - 1;
-
+    public static String EncryptionAlgorithm(String st, int key) {
+        StringBuilder str = new StringBuilder(st);// Text to cipher.
+        for (int i = 0; i < str.length(); i++) {
+            if (Character.isAlphabetic(str.charAt(i))) {
+                char ch = str.charAt(i);
+                ch += key; // ciphering.
+                if (ch > 122) {
+                    ch -= 26;
+                }
+                str.setCharAt(i, ch);
             }
         }
-        return letters[index];
-
-
+        return str.toString();
     }
 }
