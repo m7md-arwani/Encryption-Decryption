@@ -1,25 +1,35 @@
 package encryptdecrypt;
 
+import java.util.HashMap;
 import java.util.Scanner;
 
 
 public class Main {
     public static void main(String[] args) {
-        Scanner g = new Scanner(System.in);
-        String operation = g.nextLine();
-        String message = g.nextLine();
-        int key = g.nextInt();
-        switch (operation) {
-            case "enc":
-                EncryptionAlgorithm(message, key);
-                break;
-            case "dec":
-                DecryptionAlgorithm(message, key);
-                break;
-            default:
-                System.out.println("Wrong operation");
-                break;
+        HashMap<String, String> hash = new HashMap<>();
+        String message;
+        int key;
+        for (int i = 0; i < args.length; i += 2) {
+            hash.put(args[i], args[i + 1]);
         }
+        if ("".equals(hash.get("-data"))) {
+            message = "";
+        } else {
+            message = hash.get("-data");
+        }
+
+        if ("".equals(hash.get("-key"))) {
+            key = 0;
+        } else {
+            key = Integer.parseInt(hash.get("-key"));
+        }
+
+        if ("dec".equals(hash.get("-mode"))) {
+            DecryptionAlgorithm(message, key);
+        } else {
+            EncryptionAlgorithm(message, key);
+        }
+
 
     }
 
