@@ -2,66 +2,17 @@ package encryptdecrypt;
 
 import java.io.FileWriter;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.Scanner;
-import java.io.File;
 
 
 public class Main {
     public static void main(String[] args) {
         HashMap<String, String> hash = new HashMap<>();
-        String message = "";
-        String inPath = "";
-        String outPath = "";
-        int key;
         for (int i = 0; i < args.length; i += 2) {
             hash.put(args[i], args[i + 1]);
         }
-
-
-        if ("".equals(hash.get("-key"))) {
-            key = 0;
-        } else {
-            key = Integer.parseInt(hash.get("-key"));
-        }
-
-        if (hash.containsKey("-out")) {
-            outPath = hash.get("-out");
-
-        }
-
-        if (!hash.containsKey("-data") && !hash.containsKey("-in")) {
-            message = "";
-
-        } else if (hash.containsKey("-data") && hash.containsKey("-in")) {
-            message = hash.get("-data");
-
-        } else if (!hash.containsKey("-data") && hash.containsKey("-in")) {
-            inPath = hash.get("-in");
-            message = readFile(inPath);
-
-
-        }
-
-
-        if ("dec".equals(hash.get("-mode"))) {
-            if (!hash.containsKey("-out")) {
-                DecryptionAlgorithm(message, key);
-            } else if (hash.containsKey("-in") && hash.containsKey("-out")) {
-                DecryptionAlgorithm(message, outPath, key);
-            }
-
-        } else {
-            if (!hash.containsKey("-out")) {
-                EncryptionAlgorithm(message, key);
-            } else if (hash.containsKey("-in") && hash.containsKey("-out")) {
-                EncryptionAlgorithm(message, outPath, key);
-            }
-
-
-        }
+        commandLineInput(hash);
 
 
     }
@@ -149,11 +100,64 @@ public class Main {
 
     public static void writeFile(String text, String path) {
         try {
-            FileWriter write = new FileWriter(new File(path));
+            FileWriter write = new FileWriter(path);
             write.append(text);
             write.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void commandLineInput(HashMap<String, String> hash) {
+
+        String message = "";
+        String inPath;
+        String outPath = "";
+        int key;
+
+
+        if ("".equals(hash.get("-key"))) {
+            key = 0;
+        } else {
+            key = Integer.parseInt(hash.get("-key"));
+        }
+
+        if (hash.containsKey("-out")) {
+            outPath = hash.get("-out");
+
+        }
+
+        if (!hash.containsKey("-data") && !hash.containsKey("-in")) {
+            message = "";
+
+        } else if (hash.containsKey("-data") && hash.containsKey("-in")) {
+            message = hash.get("-data");
+
+        } else if (!hash.containsKey("-data") && hash.containsKey("-in")) {
+            inPath = hash.get("-in");
+            message = readFile(inPath);
+
+
+        }
+
+
+        if ("dec".equals(hash.get("-mode"))) {
+            if (!hash.containsKey("-out")) {
+                DecryptionAlgorithm(message, key);
+            } else if (hash.containsKey("-in") && hash.containsKey("-out")) {
+                DecryptionAlgorithm(message, outPath, key);
+            }
+
+        } else {
+            if (!hash.containsKey("-out")) {
+                EncryptionAlgorithm(message, key);
+            } else if (hash.containsKey("-in") && hash.containsKey("-out")) {
+                EncryptionAlgorithm(message, outPath, key);
+            }
+
+
+        }
+
+
     }
 }
