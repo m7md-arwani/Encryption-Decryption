@@ -6,87 +6,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 
 
-public class Main {
-    public static void main(String[] args) {
-        HashMap<String, String> hash = new HashMap<>();
-        for (int i = 0; i < args.length; i += 2) {
-            hash.put(args[i], args[i + 1]);
-        }
-        commandLineInput(hash);
-
-
-    }
-
-
-    public static void EncryptionAlgorithm(String st, int key) {
-        StringBuilder str = new StringBuilder(st);// Text to cipher.
-        for (int i = 0; i < str.length(); i++) {
-
-            char ch = str.charAt(i);
-            ch += key; // ciphering.
-            if (ch > 126) {
-                ch -= 94;
-            }
-            str.setCharAt(i, ch);
-
-        }
-        System.out.println(str);
-    }
-
-    //@Overloaded version of Encryption
-
-    public static void EncryptionAlgorithm(String mes, String out, int key) {
-        StringBuilder str = new StringBuilder(mes);// Text to cipher.
-        for (int i = 0; i < str.length(); i++) {
-
-            char ch = str.charAt(i);
-            ch += key; // ciphering.
-            if (ch > 126) {
-                ch -= 94;
-            }
-            str.setCharAt(i, ch);
-
-        }
-        writeFile(str.toString(), out);
-
-
-    }
-
-
-    public static void DecryptionAlgorithm(String st, int key) {
-        StringBuilder str = new StringBuilder(st);// Text to decipher.
-        for (int i = 0; i < str.length(); i++) {
-
-            char ch = str.charAt(i);
-            ch -= key; // deciphering.
-            if (ch > 126) {
-                ch += 94;
-            }
-            str.setCharAt(i, ch);
-
-        }
-        System.out.println(str);
-
-    }
-
-    //@Overloaded version of Decryption
-
-    public static void DecryptionAlgorithm(String st, String outPath, int key) {
-        StringBuilder str = new StringBuilder(st);// Text to decipher.
-        for (int i = 0; i < str.length(); i++) {
-
-            char ch = str.charAt(i);
-            ch -= key; // deciphering.
-            if (ch > 126) {
-                ch += 94;
-            }
-            str.setCharAt(i, ch);
-
-        }
-        writeFile(str.toString(), outPath);
-
-    }
-
+class FileOperation {
     public static String readFile(String path) {
 
         try {
@@ -95,6 +15,7 @@ public class Main {
             e.printStackTrace();
         }
         return "";
+
 
     }
 
@@ -107,6 +28,185 @@ public class Main {
             e.printStackTrace();
         }
     }
+}
+
+class Text {
+
+    private TextActivity act;
+
+
+    public Text(TextActivity act) {
+        this.act = act;
+    }
+
+    public void process(String mes, String out, int key, boolean type) {
+        this.act.processText(mes, out, key, type);
+    }
+
+    public void process(String mes, int key, boolean type) {
+        this.act.processText(mes, key, type);
+    }
+
+}
+
+interface TextActivity {
+    void processText(String mes, String out, int key, boolean type);
+
+    void processText(String mes, int key, boolean type);
+
+}
+
+class Encryption implements TextActivity {
+    @Override
+    public void processText(String mes, String out, int key, boolean type) {
+        if (type) {
+            StringBuilder str = new StringBuilder(mes);// Text to cipher.
+            for (int i = 0; i < str.length(); i++) {
+
+                char ch = str.charAt(i);
+                ch += key; // ciphering.
+                if (ch > 126) {
+                    ch -= 94;
+                }
+                str.setCharAt(i, ch);
+
+            }
+            FileOperation.writeFile(str.toString(), out);
+
+        } else {
+            StringBuilder result = new StringBuilder();
+            for (char character : mes.toCharArray()) {
+                if (Character.isLetter(character)) {
+                    char ascii;
+                    if (Character.isUpperCase(character)) {
+                        ascii = 'A';
+                    } else {
+                        ascii = 'a';
+                    }
+
+                    int originalAlphabetPosition = character - ascii;
+                    int newAlphabetPosition = (originalAlphabetPosition + key) % 26;
+                    char newCharacter = (char) (ascii + newAlphabetPosition);
+                    result.append(newCharacter);
+                } else {
+                    result.append(character);
+                }
+
+            }
+            FileOperation.writeFile(result.toString(), out);
+
+        }
+
+
+    }
+
+    @Override
+    public void processText(String mes, int key, boolean type) {
+        if (type) {
+            StringBuilder str = new StringBuilder(mes);// Text to cipher.
+            for (int i = 0; i < str.length(); i++) {
+
+                char ch = str.charAt(i);
+                ch += key; // ciphering.
+                if (ch > 126) {
+                    ch -= 94;
+                }
+                str.setCharAt(i, ch);
+
+            }
+            System.out.println(str);
+
+        } else {
+            StringBuilder result = new StringBuilder();
+            for (char character : mes.toCharArray()) {
+                if (Character.isLetter(character)) {
+                    char ascii;
+                    if (Character.isUpperCase(character)) {
+                        ascii = 'A';
+                    } else {
+                        ascii = 'a';
+                    }
+
+                    int originalAlphabetPosition = character - ascii;
+                    int newAlphabetPosition = (originalAlphabetPosition + key) % 26;
+                    char newCharacter = (char) (ascii + newAlphabetPosition);
+                    result.append(newCharacter);
+                } else {
+                    result.append(character);
+                }
+
+            }
+            System.out.println(result);
+
+        }
+
+
+    }
+}
+
+class Decryption implements TextActivity {
+    @Override
+    // to a file
+    public void processText(String mes, String out, int key, boolean type) {
+        if (type) {
+            StringBuilder str = new StringBuilder(mes);// Text to decipher.
+            for (int i = 0; i < str.length(); i++) {
+
+                char ch = str.charAt(i);
+                ch -= key; // deciphering.
+                if (ch > 126) {
+                    ch += 94;
+                }
+                str.setCharAt(i, ch);
+
+            }
+            FileOperation.writeFile(str.toString(), out);
+
+        } else {
+            new Encryption().processText(mes, out, 26 - (key % 26), false);
+
+        }
+
+
+    }
+
+    // to the standard output
+    public void processText(String mes, int key, boolean type) {
+        if (type) {
+            StringBuilder str = new StringBuilder(mes);// Text to decipher.
+            for (int i = 0; i < str.length(); i++) {
+
+                char ch = str.charAt(i);
+                ch -= key; // deciphering.
+                if (ch > 126) {
+                    ch += 94;
+                }
+                str.setCharAt(i, ch);
+
+            }
+            System.out.println(str);
+
+        } else {
+            new Encryption().processText(mes, 26 - (key % 26), false);
+
+        }
+
+
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+        HashMap<String, String> hash = new HashMap<>();
+        for (int i = 0; i < args.length; i += 2) {
+            hash.put(args[i], args[i + 1]);
+        }
+        commandLineInput(hash);
+
+
+    }
+
 
     public static void commandLineInput(HashMap<String, String> hash) {
 
@@ -135,24 +235,37 @@ public class Main {
 
         } else if (!hash.containsKey("-data") && hash.containsKey("-in")) {
             inPath = hash.get("-in");
-            message = readFile(inPath);
+            message = FileOperation.readFile(inPath);
 
 
         }
+        // if true, Unicode & if false, shift
+        // default case is shift
+        boolean typeFlag = false;
+        if (hash.containsKey("-alg")) {
+            if ("unicode".equals(hash.get("-alg"))) {
+                typeFlag = true;
+            }
+        }
 
 
+        Text text;
         if ("dec".equals(hash.get("-mode"))) {
             if (!hash.containsKey("-out")) {
-                DecryptionAlgorithm(message, key);
+                text = new Text(new Decryption());
+                text.process(message, key, typeFlag);
             } else if (hash.containsKey("-in") && hash.containsKey("-out")) {
-                DecryptionAlgorithm(message, outPath, key);
+                text = new Text(new Decryption());
+                text.process(message, outPath, key, typeFlag);
             }
 
         } else {
             if (!hash.containsKey("-out")) {
-                EncryptionAlgorithm(message, key);
+                text = new Text(new Encryption());
+                text.process(message, key, typeFlag);
             } else if (hash.containsKey("-in") && hash.containsKey("-out")) {
-                EncryptionAlgorithm(message, outPath, key);
+                text = new Text(new Encryption());
+                text.process(message, outPath, key, typeFlag);
             }
 
 
