@@ -1,5 +1,7 @@
 package encryptdecrypt;
 
+
+// Part from Strategy Design pattern is making a base class.
 public class Text {
 
     private TextActivity act;

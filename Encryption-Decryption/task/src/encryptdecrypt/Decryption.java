@@ -1,8 +1,11 @@
 package encryptdecrypt;
 
+
+// Decryption class contains two types unicode and shift.
+// "type" parameter will decide which type to go with. True ---> Unicode. False ---> Shift
 public class Decryption implements TextActivity {
     @Override
-    // to a file
+    // in case the output is to a file.
     public void processText(String mes, String out, int key, boolean type) {
         if (type) {
             StringBuilder str = new StringBuilder(mes);// Text to decipher.

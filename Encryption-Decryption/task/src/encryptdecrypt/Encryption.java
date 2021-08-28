@@ -1,5 +1,7 @@
 package encryptdecrypt;
 
+// Encryption class contains two types unicode and shift.
+// "type" parameter will decide which type to go with. True ---> Unicode. False ---> Shift
 public class Encryption implements TextActivity {
     @Override
     public void processText(String mes, String out, int key, boolean type) {
@@ -21,6 +23,7 @@ public class Encryption implements TextActivity {
             StringBuilder result = new StringBuilder();
             for (char character : mes.toCharArray()) {
                 if (Character.isLetter(character)) {
+                    // depending on letters sizes, this variable will hold different ascii code.
                     char ascii;
                     if (Character.isUpperCase(character)) {
                         ascii = 'A';
