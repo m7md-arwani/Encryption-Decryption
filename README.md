@@ -20,7 +20,7 @@ If not written, the program will assume Encryption.
 #### -data & -in
 
 Both of these are responsible for input. However, -data will take the input from the text written directly after it. Whereas -in takes the input from a file. It is enough to write the file name. Note that the file should be in the same file as the program. -data is preferred by the program. Thus, when both -data & -in ara available, the program chooses -data.
-Note that both options take their text between quotes.
+Note that option -data takes its text between quotes.
 
 #### -key
 
@@ -28,7 +28,7 @@ The encryption key represents how many times the characters of the text will get
 
 #### -out
 
-This option outputs the result in a file by just passing the file name between quotes after the option. If not written, the program will output the text to the console.
+This option outputs the result in a file by just passing the file name after the option. If not written, the program will output the text to the console.
 
 #### -alg
 
